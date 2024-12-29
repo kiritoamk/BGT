@@ -1,0 +1,53 @@
+exp 1 ultra sonic sensor
+
+#define TRIG_PIN 9
+#define ECHO_PIN 10
+#define LED_LOW 2
+#define LED_MEDIUM 3
+#define LED_HIGH 4
+
+void setup() {
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  pinMode(LED_LOW, OUTPUT);
+  pinMode(LED_MEDIUM, OUTPUT);
+  pinMode(LED_HIGH, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Send ultrasonic pulse
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+
+  // Measure echo time
+  long duration = pulseIn(ECHO_PIN, HIGH);
+  
+  // Convert to distance (in cm)
+  int distance = duration * 0.034 / 2;
+
+  // Display distance in Serial Monitor
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  // Control LEDs based on distance
+  if (distance > 30) { // Water level is low
+    digitalWrite(LED_LOW, HIGH);
+    digitalWrite(LED_MEDIUM, LOW);
+    digitalWrite(LED_HIGH, LOW);
+  } else if (distance <= 30 && distance > 10) { // Water level is medium
+    digitalWrite(LED_LOW, LOW);
+    digitalWrite(LED_MEDIUM, HIGH);
+    digitalWrite(LED_HIGH, LOW);
+  } else if (distance <= 10) { // Water level is high
+    digitalWrite(LED_LOW, LOW);
+    digitalWrite(LED_MEDIUM, LOW);
+    digitalWrite(LED_HIGH, HIGH);
+  }
+
+  delay(500); // Short delay for stability
+}

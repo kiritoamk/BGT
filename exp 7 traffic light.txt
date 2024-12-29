@@ -1,0 +1,31 @@
+// Pin configuration
+const int redPin = 3;
+const int yellowPin = 4;
+const int greenPin = 5;
+
+void setup() {
+  // Initialize the LED pins as OUTPUT
+  pinMode(redPin, OUTPUT);
+  pinMode(yellowPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+}
+
+void loop() {
+  // Red Light: ON for 5 seconds
+  digitalWrite(redPin, HIGH);  // Turn on red LED
+  digitalWrite(yellowPin, LOW);  // Turn off yellow LED
+  digitalWrite(greenPin, LOW);  // Turn off green LED
+  delay(5000);  // Wait for 5 seconds
+
+  // Yellow Light: ON for 2 seconds
+  digitalWrite(redPin, LOW);  // Turn off red LED
+  digitalWrite(yellowPin, HIGH);  // Turn on yellow LED
+  digitalWrite(greenPin, LOW);  // Turn off green LED
+  delay(2000);  // Wait for 2 seconds
+
+  // Green Light: ON for 3 seconds
+  digitalWrite(redPin, LOW);  // Turn off red LED
+  digitalWrite(yellowPin, LOW);  // Turn off yellow LED
+  digitalWrite(greenPin, HIGH);  // Turn on green LED
+  delay(3000);  // Wait for 3 seconds
+}

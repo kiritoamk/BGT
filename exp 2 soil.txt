@@ -1,0 +1,26 @@
+#define SOIL_SENSOR_PIN A0 
+#define LED_MOTOR 13       
+
+const int moistureThreshold = 500; 
+
+void setup() {
+  pinMode(LED_MOTOR, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+   int soilMoistureValue = analogRead(SOIL_SENSOR_PIN);
+
+   Serial.print("Soil Moisture: ");
+  Serial.println(soilMoistureValue);
+
+    if (soilMoistureValue > moistureThreshold) {
+    digitalWrite(LED_MOTOR, HIGH); 
+    Serial.println("Motor ON - Soil is dry");
+  } else {
+    digitalWrite(LED_MOTOR, LOW); 
+    Serial.println("Motor OFF - Soil is moist");
+  }
+
+  delay(500); 
+}

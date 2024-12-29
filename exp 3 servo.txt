@@ -1,0 +1,62 @@
+#include <Servo.h>
+
+// Pins for components
+#define TRIG_PIN 9
+#define ECHO_PIN 10
+#define IR_SENSOR_PIN 7
+#define SERVO_PIN 3
+
+// Waste level threshold (in cm)
+const int wasteThreshold = 10;
+
+Servo dustbinServo;
+
+void setup() {
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  pinMode(IR_SENSOR_PIN, INPUT);
+
+  dustbinServo.attach(SERVO_PIN);
+  dustbinServo.write(0); // Lid closed by default
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Check if someone is near the dustbin
+  int irValue = digitalRead(IR_SENSOR_PIN);
+
+  if (irValue == HIGH) { // Motion detected
+    Serial.println("Motion detected. Opening lid...");
+    dustbinServo.write(90); // Open the lid
+    delay(5000);           // Keep it open for 5 seconds
+    dustbinServo.write(0);  // Close the lid
+  }
+
+  // Measure waste level
+  long duration = measureDistance();
+  int distance = duration * 0.034 / 2;
+
+  Serial.print("Waste Level Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  // Check waste level
+  if (distance <= wasteThreshold) {
+    Serial.println("Dustbin is full! Please empty.");
+  } else {
+    Serial.println("Dustbin has space.");
+  }
+
+  delay(1000); // Short delay for stability
+}
+
+// Function to measure distance using ultrasonic sensor
+long measureDistance() {
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  return pulseIn(ECHO_PIN, HIGH);
+}

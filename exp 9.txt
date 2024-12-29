@@ -1,0 +1,23 @@
+#include <Servo.h>
+
+const int irSensor = 2;
+const int servoPin = 9;
+
+Servo accessServo;
+
+void setup() {
+  pinMode(irSensor, INPUT);
+  accessServo.attach(servoPin);
+}
+
+void loop() {
+  int sensorState = digitalRead(irSensor);
+
+  if (sensorState == HIGH) {
+    accessServo.write(90);
+  } else {
+    accessServo.write(0);
+  }
+
+  delay(1000);
+}

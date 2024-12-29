@@ -1,0 +1,64 @@
+turbidity sensor
+
+
+const int trigPin = 9;
+const int echoPin = 10;
+const int turbidityPin = A0;
+const int ledPin = 6;
+const int buzzerPin = 7;
+
+
+const int turbidityThreshold = 500; // Adjust as needed
+const float distanceThreshold = 10.0; // cm
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(turbidityPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  
+  float distance = measureDistance();
+  
+  
+  int turbidityValue = analogRead(turbidityPin);
+
+  
+  Serial.print("Distance (cm): ");
+  Serial.println(distance);
+  Serial.print("Turbidity Value: ");
+  Serial.println(turbidityValue);
+
+
+  if (distance < distanceThreshold || turbidityValue > turbidityThreshold) {
+    digitalWrite(ledPin, HIGH);
+    digitalWrite(buzzerPin, HIGH);
+    Serial.println("ALERT: Quality threshold breached!");
+  } else {
+    digitalWrite(ledPin, LOW);
+    digitalWrite(buzzerPin, LOW);
+  }
+
+  delay(1000);
+}
+
+float measureDistance() {
+  
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  
+  long duration = pulseIn(echoPin, HIGH);
+
+  // Calculate distance
+  float distance = duration * 0.034 / 2;
+  return distance;
+}

@@ -1,0 +1,36 @@
+#include <Servo.h>
+
+// Pin configuration
+const int irSensorPin = 2;  // IR sensor pin
+const int servoPin = 9;     // Servo motor pin
+
+Servo parkingServo;
+
+void setup() {
+  // Initialize IR sensor pin
+  pinMode(irSensorPin, INPUT);
+
+  // Initialize the servo motor
+  parkingServo.attach(servoPin);
+  parkingServo.write(0);  // Initial position of the servo (free slot)
+
+  // Start the serial communication for output
+  Serial.begin(9600);
+  Serial.println("Parking Slot Status System Initialized.");
+}
+
+void loop() {
+  int sensorValue = digitalRead(irSensorPin);  // Read the value from the IR sensor
+
+  if (sensorValue == HIGH) {
+    // No car detected (free slot)
+    parkingServo.write(0);  // Move the servo to position 0 (free)
+    Serial.println("Parking Slot is FREE.");
+  } else {
+    // Car detected (slot occupied)
+    parkingServo.write(90);  // Move the servo to position 90 (occupied)
+    Serial.println("Parking Slot is OCCUPIED.");
+  }
+
+  delay(500);  // Delay for half a second before checking again
+}
